@@ -7,10 +7,7 @@ import type { Reply } from './Reply';
 
 
 function App() {
-  const [messages, setMessage] = useState<Message[]>([
-    {role: 'user', content: 'how to us useState?'},
-    {role: 'ai', content: 'It is used to add "variable data to components, such as const[n, setN] = useState(0)'}
-  ]);
+  const [messages, setMessage] = useState<Message[]>([]);
   const [input, setInput] = useState ('');
   const [streaming, setStreaming] = useState(false);//状态量true时表示正在回答 false表示停止回答
   const stopRef = useRef(false); //控制send函数启停
