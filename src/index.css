@@ -138,6 +138,7 @@ code {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  text-align:left;
 }
 
 .row{
@@ -204,5 +205,10 @@ code {
 .chatcard button:active:not(:disabled) { transform: scale(.96); }
 .chatcard button:disabled { background: #bebfc2; cursor: not-allowed; }
 
+.cursor { display: inline-block; width: 7px; height: 15px; background: #1f6feb;
+          vertical-align: -2px; animation: blink .9s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
 
+.chatcard .stop { background: #ef4444; color: #fff; }
+@media (prefers-reduced-motion: reduce) { .cursor { animation: none; } }
 
