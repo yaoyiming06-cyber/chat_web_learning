@@ -27,8 +27,10 @@ function App() {
           ))}
         </div>
         <div className='chatcard'>
-          <input value = {input} onChange={(e) => setInput(e.target.value)} 
-          placeholder="please enter the text"/>
+          <input value = {input} onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') send();}}
+           placeholder="please enter the text" />
+          
           <button onClick = {send} disabled={input.trim() === ''}>Send
           </button>
         </div>
