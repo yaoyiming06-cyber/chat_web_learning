@@ -50,15 +50,8 @@
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+  text-align:left;
+  
 }
 
 body {
@@ -113,19 +106,19 @@ code {
 
 .chat{
   background-color:#fff;
-  height: 100vh;
+  flex:1;                 /* 吃掉剩余宽度(在 .layout 横向 flex 里) */
+  min-width: 0;           /* 长消息不顶破布局 */
   display: flex;
-  max-width: 1860px;
-  width: 1000px;
-  margin: 0 auto;
-  flex-direction: column;
+  flex-direction:column;  /* 竖向:header / msgs / chatcard */
+  /* ★ 不要写 flex-wrap:列方向配 wrap 会把内容折成第二列 */
+  /* ★ 不要写 width / height:交给 .layout 和 flex 决定 */
 }
 
 .chat-header{
   padding:12px 20px;
-  margin:10px;
+  margin:0;               /* 子元素默认就撑满宽度(margin:auto 是"单栏居中"时代的写法) */
   border-bottom: 1px solid #000000;
-  font-weight: 600px;
+  font-weight: 600;       /* ★ 原来是 600px —— px 不能用于 font-weight,CSS 会整条丢弃 */
   color:#010810;
   text-align:left;
   font-size:25px;
@@ -139,6 +132,7 @@ code {
   flex-direction: column;
   gap: 14px;
   text-align:left;
+  min-width: 0;
 }
 
 .row{
@@ -148,11 +142,23 @@ code {
 .row.user{
   justify-content: flex-end;
 }
-.bubble { max-width: 640px; padding: 12px 16px; border-radius: 12px; font-size: 14.5px; line-height: 1.75; }
-.user .bubble { background: #1f6feb; color: #fff; border-bottom-right-radius: 4px; }
-.ai .bubble { background: #f6f8fa; border: 1px solid #e2e8f0; border-bottom-left-radius: 4px; }
-
-
+.bubble {
+  max-width: 640px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14.5px;
+  line-height: 1.75; 
+}
+.ai .bubble { 
+  background: #f6f8fa;
+  border: 1px solid #e2e8f0;
+  border-bottom-left-radius: 4px;
+}
+.user .bubble { 
+  background: #1f6feb;
+  color: #fff;
+  border-bottom-right-radius: 4px; 
+}
 .row.fresh{
   animation: rise .25s ease both;
 }
@@ -168,35 +174,32 @@ code {
  background-color: #d7d5d8;
  display: flex;
  flex-direction: column;
+ flex-wrap:wrap;
  gap:16px;
  border-radius:15px;
- margin:15px;
-
 }
 .chatcard input{
   flex:1;
   min-width:0;
-  height:100px;
   border-top: 0px solid #000000;
   border-left: 0 solid #000000;
   border-radius:12px;
   margin: 15px 10px 0px 10px;
   background-color:#d7d5d8;
   font-size:20px;
-  padding:1px 10px 100px;
+  padding:1px 10px 50px;
   transition: border-color .15s ease, box-shadow .15s ease; 
 }
 .chatcard input:focus { outline: none; border-color: #858b93; box-shadow: 0 0 0 3px rgba(131, 136, 143, 0.15); }
 
 .chatcard button{
-  width:60px;
-  height:50px;
-  border-radius:0px;
-  background-color:#d7d5d8;
-  margin:1px 10px 20px 850px;
+  flex:none;
+  background-color:#7d0db1;
+  margin:11px 30px 3px 1150px;
   border-radius:30px;
   cursor: pointer;
   color:#16171d;
+  height:30px;
   border:0.5px solid #000000;
   transition: background .15s ease, transform .12s ease, box-shadow .15s ease;
 }
@@ -212,3 +215,32 @@ code {
 .chatcard .stop { background: #ef4444; color: #fff; }
 @media (prefers-reduced-motion: reduce) { .cursor { animation: none; } }
 
+/* ===== 布局:只保留这一套(旧的两套 .sidebar / .layout 已删,免得"谁生效"搞不清) ===== */
+.layout {
+  display: flex;             /* 左右分栏 */
+  width: 100%;
+  height: 100vh;             /* ★ 只写 vh:你的浏览器不认 dvh,写 dvh 那条会被整个丢弃 */
+}
+
+.sidebar {
+  width: 240px; flex: none;                        /* flex:none = 不许被内容挤扁 */
+  background: #f8fafc; border-right: 1px solid #e2e8f0;
+  display: flex; flex-direction: column; padding: 12px 8px; gap: 8px;
+  /* 高度不用写:align-items 默认 stretch,自动撑满 .layout */
+}
+.sidebar .new {
+  border: 0; background: #1f6feb; color: #fff; border-radius: 8px;
+  padding: 9px 12px; cursor: pointer; font-size: 14px;
+  transition: background .15s ease;
+}
+.sidebar .new:hover { background: #1757c1; }
+
+.sessions { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+.session { padding: 9px 10px; border-radius: 8px; cursor: pointer; transition: background .15s ease; }
+.session:hover { background: #eef2f7; }              /* 悬停反馈(第 4 步学的 transition) */
+.session.active { background: #e7f0ff; }              /* 当前会话高亮 */
+.s-title { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.s-preview { font-size: 12px; color: #6b7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.chat { flex: 1; min-width: 0; }                      /* ★ min-width:0 必写,原因见 6e */
+.chatcard button { margin-left: auto; margin-right: 10px; }   /* 替掉原来的 margin-left:850px */
