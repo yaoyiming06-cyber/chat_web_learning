@@ -1,4 +1,5 @@
 import type { Message } from "../types";
+import ReactMarkdown from 'react-markdown';
 
 interface MessageBubbleProps{
     message: Message;
@@ -10,7 +11,8 @@ function MessageBubble({message, fresh, typing}: MessageBubbleProps){
     const isUser = message.role === 'user';
     return(
         <div className = {`row ${isUser? 'user': 'ai'} ${fresh? 'fresh': ''}`}>
-            <div className = "bubble">{message.content}
+            <div className = "bubble">
+                {isUser ? message.content : <ReactMarkdown>{message.content}</ReactMarkdown>}
                 {typing && <span className = 'cursor'></span>}
                 </div>
         </div>
